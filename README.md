@@ -1,88 +1,67 @@
-# Algorithmic Trading using Machine Learning
+# Algorithmic Trading with Unsupervised Learning
 
-## Overview
-This project implements and evaluates multiple algorithmic trading strategies using financial data, statistical models, and machine learning concepts. The primary goal is to explore different approaches for generating trading signals, assessing performance, and combining quantitative analysis with predictive modeling.
+This project, outlined in a Jupyter Notebook, demonstrates the development of an algorithmic trading strategy using unsupervised machine learning. The core idea is to group similar stocks using clustering and then build a portfolio from a selected cluster.
 
-The strategies implemented include:
-1. **Unsupervised Learning Trading Strategy** – Detects patterns and clusters in asset price movements without labeled outcomes.
-2. **Twitter Sentiment Trading Strategy** – Uses sentiment data from social media to inform trading decisions.
-3. **Intraday GARCH Trading Strategy** – Models market volatility to adapt trading positions based on risk.
-
----
-
-## Data Sources
-The project uses:
-- **Market Data**: Historical price data from Yahoo Finance (`yfinance` library).
-- **Twitter Data**: Sentiment scores, engagement metrics (likes, comments, impressions), and activity counts for specific stock tickers.
-- **Technical Indicators**: Generated using `pandas_ta` to extract features like RSI, MACD, moving averages.
+## Table of Contents
+1.  [Project Idea](#project-idea)
+2.  [Key Concepts](#key-concepts)
+3.  [Project Workflow](#project-workflow)
+4.  [Visualizations](#visualizations)
 
 ---
 
-## Methodology
+## 1. Project Idea
 
-### 1. Data Collection
-- Fetched historical OHLCV (Open, High, Low, Close, Volume) data for selected tickers.
-- Loaded pre-computed Twitter sentiment metrics and engagement ratios.
-- Merged market and sentiment datasets based on ticker and date.
-
-**Why**: Combining price history with sentiment and engagement data can improve the predictive power of trading models.
+The primary goal of this project is to create a data-driven trading strategy. Instead of relying on a pre-defined model, the approach uses **unsupervised learning** to identify natural groupings of stocks based on their statistical and technical characteristics. By identifying these clusters, we can then select a group of stocks that exhibit similar behaviors and construct a portfolio from that group. The portfolio's performance is then optimized for the highest possible risk-adjusted return.
 
 ---
 
-### 2. Feature Engineering
-- Created technical indicators using `pandas_ta` (e.g., RSI, MACD, Bollinger Bands).
-- Normalized sentiment and engagement scores.
-- Calculated returns and volatility.
-- Generated lag features to capture short-term memory of the market.
+## 2. Key Concepts
 
-**Why**: Features derived from both market data and sentiment help capture different aspects of price behavior — technical, psychological, and statistical.
+### Algorithmic Trading
+The use of computer programs and algorithms to automatically execute trades in the financial markets. This project automates the process of data analysis, stock selection, and portfolio optimization.
 
----
+### Unsupervised Learning
+A type of machine learning where the algorithm is not given labeled data. It is tasked with finding patterns and structures within the data on its own. In this project, we use **K-Means Clustering** to identify and group similar stocks.
 
-### 3. Strategy 1: Unsupervised Learning
-- Applied clustering algorithms (e.g., K-Means) on technical + sentiment features.
-- Identified market regimes (e.g., bullish, bearish, sideways) from clusters.
-- Backtested regime-based trading rules.
+### Fama-French Factors
+A set of factors widely used in finance to explain asset returns. The project uses the 5-factor model, which includes:
+* **Market Risk:** The risk associated with the overall market.
+* **Size:** The size of a company (small-cap vs. large-cap).
+* **Value:** A company's book-to-market ratio (value stocks vs. growth stocks).
+* **Operating Profitability:** A measure of a company's profit margin.
+* **Investment:** How much a company invests in its assets.
 
-**Why**: Unsupervised learning reveals hidden patterns without needing predefined labels, useful when the “ground truth” for buy/sell is unknown.
-
----
-
-### 4. Strategy 2: Twitter Sentiment Trading
-- Used `twitterSentiment` scores to classify market mood (positive, neutral, negative).
-- Created trading signals based on thresholds in sentiment and engagement ratios.
-- Evaluated returns when following sentiment-driven signals.
-
-**Why**: Social sentiment can move prices rapidly, especially in short-term trading, so integrating it can give a competitive edge.
+These factors provide a deeper understanding of a stock's risk and return characteristics beyond simple price movements.
 
 ---
 
-### 5. Strategy 3: Intraday GARCH Volatility Strategy
-- Applied GARCH models to intraday returns to estimate conditional volatility.
-- Adjusted position sizes dynamically — larger positions in low volatility, smaller in high volatility periods.
-- Measured strategy performance under different volatility regimes.
+## 3. Project Workflow
 
-**Why**: Volatility modeling is crucial for managing risk and optimizing trade sizes.
+The project is structured into several key steps:
+
+#### **Step 1: Data Acquisition**
+* The code downloads a list of **S&P 500** companies from Wikipedia.
+* It then uses the `yfinance` library to download historical stock price data for these companies over eight years.
+
+#### **Step 2: Feature Engineering**
+* **Technical Indicators:** The notebook calculates several technical indicators using the `pandas_ta` library, including **Garman-Klass Volatility**, **RSI**, **Bollinger Bands**, **ATR**, and **MACD**.
+* **Monthly Returns:** The code calculates monthly returns for various time horizons (1, 2, 3, 6, 9, 12 months) to capture momentum.
+* **Fama-French Betas:** The project uses a rolling linear regression (`RollingOLS`) to estimate each stock's exposure (betas) to the 5 Fama-French factors.
+
+#### **Step 3: Data Processing and Filtering**
+* The daily data is aggregated into a **month-end frequency**.
+* Stocks are filtered to include only the top 150 most liquid stocks each month based on their dollar volume.
+
+#### **Step 4: K-Means Clustering**
+* At the end of each month, the **K-Means Clustering** algorithm is applied to the data. This group's stocks are clustered into a predefined number of clusters based on their calculated features.
+
+#### **Step 5: Portfolio Construction**
+* A portfolio is constructed by selecting all the stocks within a chosen cluster.
+* The portfolio weights are then optimized using the **Efficient Frontier** method, to maximize the **Sharpe ratio** (a measure of risk-adjusted return).
 
 ---
 
-### 6. Backtesting & Evaluation
-- Simulated trades using historical data for each strategy.
-- Calculated key metrics: Sharpe ratio, win rate, drawdown, cumulative returns.
-- Compared performance of individual strategies and potential combined strategies.
+## 4. Visualizations
 
----
-
-## Key Takeaways
-- **Multimodal features** (price + sentiment + volatility) can improve trading models.
-- Unsupervised learning is useful for regime detection.
-- Sentiment trading is sensitive to data quality and threshold settings.
-- Volatility-adjusted trading helps control risk.
-
----
-
-## Next Steps
-- Replace pre-computed sentiment scores with raw NLP processing of tweets.
-- Expand to more tickers and asset classes.
-- Test ensemble strategies combining all three approaches.
-
+The final output of the project includes visualizations that compare the performance of the machine learning-driven portfolio against a benchmark, such as the **S&P 500 index**. This allows for a clear evaluation of the strategy's effectiveness.
