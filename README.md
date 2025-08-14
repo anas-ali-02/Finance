@@ -2,19 +2,11 @@
 
 This project, outlined in a Jupyter Notebook, demonstrates the development of an algorithmic trading strategy using unsupervised machine learning. The core idea is to group similar stocks using clustering and then build a portfolio from a selected cluster.
 
-## Table of Contents
-1.  [Project Idea](#project-idea)
-2.  [Key Concepts](#key-concepts)
-3.  [Project Workflow](#project-workflow)
-4.  [Visualizations](#visualizations)
-
----
 
 ## 1. Project Idea
 
 The primary goal of this project is to create a data-driven trading strategy. Instead of relying on a pre-defined model, the approach uses **unsupervised learning** to identify natural groupings of stocks based on their statistical and technical characteristics. By identifying these clusters, we can then select a group of stocks that exhibit similar behaviors and construct a portfolio from that group. The portfolio's performance is then optimized for the highest possible risk-adjusted return.
 
----
 
 ## 2. Key Concepts
 
@@ -34,7 +26,6 @@ A set of factors widely used in finance to explain asset returns. The project us
 
 These factors provide a deeper understanding of a stock's risk and return characteristics beyond simple price movements.
 
----
 
 ## 3. Project Workflow
 
@@ -60,7 +51,6 @@ The project is structured into several key steps:
 * A portfolio is constructed by selecting all the stocks within a chosen cluster.
 * The portfolio weights are then optimized using the **Efficient Frontier** method, to maximize the **Sharpe ratio** (a measure of risk-adjusted return).
 
----
 
 ## 4. Visualizations
 
